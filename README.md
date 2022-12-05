@@ -12,6 +12,6 @@ Project goals:
   4. Profit. 
   
  Additional info: 
- 1. Baseline definitions will be provided by the https://dictionaryapi.dev/.
+ 1. Baseline definitions will be provided by the Free Dictionary API (https://dictionaryapi.dev/).
  2. User accounts will be required to submit definitions and see results. User accounts will collect education and employment data IOT track definitional trends across these categories. 
 
