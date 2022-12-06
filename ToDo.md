@@ -1,5 +1,5 @@
 To Do:
-1. Scaffold frontend and backend 
+1. Scaffold frontend and backend (https://github.com/sierraplatoon/curriculum/blob/main/week-09/day3/full-stack-app.md) COMPLETE 5 Dec 22
 2. Create database schema (https://www.quickdatabasediagrams.com/)
     - User accounts
     - Cases
