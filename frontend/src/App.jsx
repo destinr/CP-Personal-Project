@@ -1,6 +1,13 @@
 import { useEffect, useState } from 'react'
 import './App.css'
 import axios from 'axios'
+import {HashRouter as Router, Routes, Route} from "react-router-dom";
+
+
+import AppNav from './components/Navbar.jsx';
+import AuthPage from './pages/Auth.jsx';
+import LandingPage from './pages/LandingPage.jsx';
+import UserPage from './pages/UserPage.jsx';
 
 function App() {
 
@@ -27,20 +34,32 @@ function App() {
   const csrftoken = getCookie('csrftoken');
   axios.defaults.headers.common["X-CSRFToken"]=csrftoken
 
-  axios
-  .get('/whoami')
-  .then((response) => {
-    console.log(response.data)
-  })
+  // Requests logged in user data from Django backend.
+  async function curr_user(){
+    let myResponse=await axios.get('currentuser/')
+    let user= myResponse.data && myResponse.data[0] && myResponse.data[0].fields
+    setUser(user)
+  }
   
-  
+  // Pulls current user data if available
+  useEffect(()=>{
+    curr_user()
+  },[])
 
+  
+  // Create webpage
   return (
     <div>
 
-      <p className="hello world">
-        Hello World
-      </p>
+      <AppNav user = {user}/>
+
+      <Router>
+        <Routes>
+          <Route path='' element={<LandingPage/>}/>
+          <Route path='/auth' element={<AuthPage/>}/>
+          <Route path='/user' element={<UserPage user={user}/>}/>
+        </Routes>
+      </Router>
 
     </div>
   )
