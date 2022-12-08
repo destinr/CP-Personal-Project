@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react'
 import './App.css'
 import axios from 'axios'
+
 import {HashRouter as Router, Routes, Route} from "react-router-dom";
-
-
 import AppNav from './components/Navbar.jsx';
 import AuthPage from './pages/Auth.jsx';
 import LandingPage from './pages/LandingPage.jsx';
@@ -55,7 +54,7 @@ function App() {
 
       <Router>
         <Routes>
-          <Route path='' element={<LandingPage/>}/>
+          <Route path='' element={<LandingPage user={user}/>}/>
           <Route path='/auth' element={<AuthPage/>}/>
           <Route path='/user' element={<UserPage user={user}/>}/>
         </Routes>

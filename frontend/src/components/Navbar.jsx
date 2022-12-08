@@ -17,7 +17,7 @@ function logOut(){
 
 function AppNav(props) {
   return (
-    <Navbar fixed='top' fluid bg="light">
+    <Navbar fixed="top" fluid bg="light">
     <Container>
     <Navbar.Brand href="/">
             <img
