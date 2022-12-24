@@ -35,3 +35,12 @@ class AppUser(AbstractUser):
     # django uses the 'username' to identify users by default, but many modern applications use 'email' instead
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = [] # Email & Password are required by default.
+    
+
+class Word(models.Model):
+    word = models.CharField(max_length=255, unique=True)
+
+class Definition(models.Model):
+    definition = models.CharField(max_length=255)
+    word = models.ForeignKey(Word,on_delete=models.CASCADE,related_name='definitions')
+    user = models.ForeignKey(AppUser,on_delete=models.CASCADE,related_name="definitions")

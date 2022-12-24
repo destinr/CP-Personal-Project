@@ -22,7 +22,6 @@ function AuthPage(props){
     event.preventDefault()
     let myResponse = await axios
       .post('/signup/',{'email':email, 'password':password, 'fName':fName, 'lName': lName, 'jobTitle':jobTitle, 'edLvl': edLvl})
-    console.log(myResponse.data)
     if(myResponse.data['signUp']==true){
       window.location.href="/#/signIn"
     }
@@ -42,7 +41,7 @@ function AuthPage(props){
       window.location.href="/"
     }
     else{
-        alert("Incorrect input")
+        alert("Username and/or password incorrect.")
         window.location.reload()
     }
   }

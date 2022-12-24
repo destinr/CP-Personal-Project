@@ -16,10 +16,12 @@ function logOut(){
 }
 
 function AppNav(props) {
-  return (
-    <Navbar fixed="top" fluid bg="light">
-    <Container>
-    <Navbar.Brand href="/">
+  
+  if(props.user){
+    return (
+      <Navbar fixed='top' bg="light" expand="lg">
+        <Container>
+          <Navbar.Brand href="/">
             <img
               alt=""
               src={AppLogo}
@@ -27,24 +29,51 @@ function AppNav(props) {
               height="30"
               className="d-inline-block align-top"
             />
-            Plain meaning?
-      </Navbar.Brand>
-      <Navbar.Toggle aria-controls="basic-navbar-nav" />
-      <Navbar.Collapse id="basic-navbar-nav">
-        <Nav className="me-auto">
-          <Nav.Link href="/">Home</Nav.Link>
-        </Nav>
-        {props.user &&
-          <Nav className="ms-auto">
-            <Nav.Link  href="/#/user">User: {props.user.email}</Nav.Link> 
-            <Nav.Link  class='text-warning' to="/" onClick={()=>logOut()}><p class='text-danger'>Logout</p></Nav.Link> 
-          </Nav>
-        }
-        {!props.user && <Nav.Link  href="/#/auth">Log In/Sign Up</Nav.Link>}
-      </Navbar.Collapse>
-    </Container>
-  </Navbar>
-  );
-}
+              <i>Plain Meaning?</i>
+            </Navbar.Brand>
+          <Navbar.Toggle aria-controls="basic-navbar-nav" />
+          <Navbar.Collapse id="basic-navbar-nav">
+            <Nav className="me-auto">
+              <Nav.Link href="/">Home</Nav.Link>
+              <Nav.Link href="/#/SubmitDefinitions">Submit Definitions</Nav.Link>
+              <Nav.Link href="/">User: {props.user.email}</Nav.Link> 
+            </Nav>
+            <Nav className="justify-content-end">
+              <Nav.Link to="/" onClick={()=>logOut()}>Logout</Nav.Link> 
+            </Nav>
+          </Navbar.Collapse>
+        </Container>
+      </Navbar>
+    );
+  }
+
+  else{
+    return(
+      <Navbar fixed='top' bg="light" expand="lg">
+        <Container>
+          <Navbar.Brand href="/">
+            <img
+              alt=""
+              src={AppLogo}
+              width="30"
+              height="30"
+              className="d-inline-block align-top"
+            />
+              <i>Plain Meaning?</i>
+            </Navbar.Brand>
+          <Navbar.Toggle aria-controls="basic-navbar-nav" />
+          <Navbar.Collapse id="basic-navbar-nav">
+            <Nav className=" me-auto">
+              <Nav.Link href="/">Home</Nav.Link>
+            </Nav>
+            <Nav className="justify-content-end">
+              <Nav.Link  href="/#/auth">Log In/Sign Up</Nav.Link>
+            </Nav>
+          </Navbar.Collapse>
+        </Container>
+      </Navbar>
+    );
+  }
+};
 
 export default AppNav;
