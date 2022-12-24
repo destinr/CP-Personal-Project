@@ -29,7 +29,7 @@ function AppNav(props) {
               height="30"
               className="d-inline-block align-top"
             />
-              <i>Plain Meaning?</i>
+              <i> Plain Meaning?</i>
             </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">

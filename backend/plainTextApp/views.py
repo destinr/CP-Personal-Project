@@ -62,33 +62,74 @@ def getWord(request):
     # Gathers a random word from the Random-Word-API
     apiNinjaKey = '0m0x7UiJ5k3qldFYwp+v/Q==Z9t6K3oBvAenAdo0'
     api_url = 'https://api.api-ninjas.com/v1/randomword'
-    response = HTTPClient.get(api_url, headers={'X-Api-Key': '0m0x7UiJ5k3qldFYwp+v/Q==Z9t6K3oBvAenAdo0'})
-    strResponse = response.text
-    wordTemp = (strResponse.split(":"))[1]
-    wordFinal = "".join(re.findall("[a-zA-Z]+", wordTemp))
+    app_id  = 'f42a39b0'
+    app_key  = '630b23220cad3f9a800f3fa8c0f16867'
     
+    validWord = False
+    while not validWord:
+        
+        response = HTTPClient.get(api_url, headers={'X-Api-Key': '0m0x7UiJ5k3qldFYwp+v/Q==Z9t6K3oBvAenAdo0'})
+        strResponse = response.text
+        wordTemp = (strResponse.split(":"))[1]
+        wordFinal = "".join(re.findall("[a-zA-Z]+", wordTemp))
+        
+        endpoint = url = "https://od-api.oxforddictionaries.com/api/v2/" + 'entries' + "/" + 'en-us' + "/" + wordFinal.lower() + '?fields=' + 'definitions'
+        defRes = HTTPClient.get(endpoint, headers = {"app_id": app_id, "app_key": app_key})
+        defResJSON = defRes.json()
+        try:
+            definition = defResJSON['results'][0]['lexicalEntries'][0]['entries'][0]['senses'][0]['definitions'][0]
+            validWord = True
+        except:
+            pass
+        
     # tries to create a new word instance in the database, will work if word has not already begun to be defined
     try:
         newWord=Word(word=wordFinal)
         newWord.save()
         wordObj=Word.objects.get(word=wordFinal)
-        wordToBeSent = {'id': wordObj.id, 'word':wordObj.word}
+        data = {'id': wordObj.id, 'word':wordObj.word}
         
     
     # serves existing word database instance if word is already in database    
     except:
         wordObj=Word.objects.get(word=wordFinal)
-        wordToBeSent = {'id': wordObj.id, 'word':wordObj.word}
+        data = {'id': wordObj.id, 'word':wordObj.word}  
         
+    data['ODef'] = definition
     
+    return JsonResponse(data)
+
+@api_view(['POST'])
+def submitDef(request):
+    userDef = request.data['userDef']
+    wordID = request.data['wordID']
+    userEmail = request.data['userEmail']
     
-    # Gathers the definition for the random word from the Oxford Dictionary API
-    # app_id  = 'f42a39b0'
-    # app_key  = '630b23220cad3f9a800f3fa8c0f16867'
+    relatedUser = User.objects.get(email=userEmail)
+    relatedWord = Word.objects.get(id=wordID)
     
-    # endpoint = url = "https://od-api.oxforddictionaries.com/api/v2/" + 'entries' + "/" + 'en-us' + "/" + 'bat'.lower() + '?fields=' + 'definitions'
-    # defRes = HTTPClient.get(endpoint, headers = {"app_id": app_id, "app_key": app_key})
-    # defResJSON = defRes.json()
-    # definition = defResJSON['results'][0]['lexicalEntries'][0]['entries'][0]['senses'][0]['definitions'][0]
+    newDefinition = Definition(word=relatedWord, user=relatedUser, definition=userDef)
+    print(newDefinition)
+    newDefinition.save()
     
-    return JsonResponse(data={'word': wordToBeSent, 'definition': 'test'})
+    return JsonResponse({'success':True})
+
+@api_view(['POST'])
+def getRecent(request):
+    userEmail = request.data['userEmail']
+    relatedUser = User.objects.get(email=userEmail)
+    
+    definitions = Definition.objects.filter(user=relatedUser)
+    data = {}
+    
+    if len(definitions) > 5:
+        for entry in definitions[-5:]:
+            data[entry.word.word] = entry.definition
+    else:
+        for entry in definitions:
+            data[entry.word.word] = entry.definition
+
+    return JsonResponse({'data':data})
+
+
+

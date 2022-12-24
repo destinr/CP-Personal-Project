@@ -2,14 +2,13 @@ import {Row, Container} from "react-bootstrap";
 import axios from 'axios'
 import { useEffect, useState } from 'react'
 
-async function getWord(){
-  
-}
 
 function DefSubmitPage(props){
 
   const [word, setWord] = useState('')
-  const [def, setDef] = useState('')
+  const [wordID, setWordID] = useState('')
+  const [oDef, setODef] = useState('')
+  const [userDef, setUserDef] = useState('')
 
   useEffect(()=>{
 
@@ -17,10 +16,23 @@ function DefSubmitPage(props){
     .then((response)=>{
       console.log(response.data)
       setWord(response.data['word'])
-      setDef(response.data['definition'])
+      setWordID(response.data['id'])
+      setODef(response.data['ODef'])
       }
     )
   }, [])
+
+  async function sendDef(){
+    event.preventDefault()
+    let myResponse = await axios
+      .post('/submitDef/',{'userDef':userDef, 'wordID':wordID, 'userEmail': props.user.email})
+    if(myResponse.data['success']==true){
+      window.location.reload()
+    }
+    else{
+      alert("oops, something went wrong")
+    }
+  }
   
 
     return(
@@ -29,7 +41,16 @@ function DefSubmitPage(props){
               <p> Word: {word}</p>
             </Row>
             <Row>
-              <p> Definition: {def}</p>
+            <label>Submit your definition (placeholder text is an Oxford dicitionary definition)</label>
+              <input
+                type="user definition"
+                className="form-control mt-1"
+                placeholder={oDef}
+                onChange={(event)=>{setUserDef(event.target.value)}}
+              />
+              <button type="submit" className="btn btn-primary" onClick={()=>{sendDef()}}>
+              Submit definition!
+            </button>
             </Row>
         </Container>
     )

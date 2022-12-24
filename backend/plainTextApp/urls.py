@@ -7,5 +7,7 @@ urlpatterns = [
     path('signin/',views.signIn),
     path('signup/',views.signUp),
     path('logout/',views.logOut),
-    path('getWord/',views.getWord)
+    path('getWord/',views.getWord),
+    path('submitDef/',views.submitDef),
+    path('getRecent/',views.getRecent)
 ]

@@ -5,15 +5,30 @@ import axios from 'axios'
 
 function RecentWordsCard(props){
 
+    const [recentDefs, setRecentDefs] = useState([])
+    
+    useEffect(()=>{
+
+        axios.post('/getRecent/',{'userEmail': props.user.email})
+        .then((response)=>{
+          console.log(response.data)
+          setRecentDefs(response.data['data'])
+          }
+        )
+      }, [])
+
     return(
     <Card>
         <Card.Body>
         <Card.Title> Recently Defined Words </Card.Title>
         <ListGroup variant="flush">
-            <ListGroup.Item>Example 1</ListGroup.Item>
-            <ListGroup.Item>Example 2</ListGroup.Item>
-            <ListGroup.Item>Example 3</ListGroup.Item>
+        {recentDefs && Object.keys(recentDefs).map((key,index) =>{
+            return(
+                <ListGroup.Item>{key}: {recentDefs[key]}</ListGroup.Item>
+            )
+        })}
         </ListGroup>
+        <Button href="/#/SubmitDefinitions">Submit some definitions!</Button>
         </Card.Body>
     </Card> 
     )

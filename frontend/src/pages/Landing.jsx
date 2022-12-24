@@ -8,12 +8,14 @@ import RecentWordsCard from '../components/RecentWordsCard.jsx'
 
 
 function LandingPage(props){
-    let navigate = useNavigate()
-    function logIn(){
-      let path = '/auth'
-      navigate(path)
+    
+  // let navigate = useNavigate()
+  //   function logIn(){
+  //     let path = '/auth'
+  //     navigate(path)
 
-    }
+  //   }
+
     if (!props.user){
       return(
           <Container fluid>
@@ -34,7 +36,7 @@ function LandingPage(props){
             </Row>
             <Row>
               <Col><UserCard user={props.user}/></Col> 
-              <Col><RecentWordsCard/></Col>
+              <Col><RecentWordsCard user={props.user}/></Col>
             </Row>
         </Container>
     )
