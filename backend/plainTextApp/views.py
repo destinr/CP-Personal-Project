@@ -119,7 +119,7 @@ def getRecent(request):
     userEmail = request.data['userEmail']
     relatedUser = User.objects.get(email=userEmail)
     
-    definitions = Definition.objects.filter(user=relatedUser)
+    definitions = list(Definition.objects.filter(user=relatedUser))
     data = {}
     
     if len(definitions) > 5:
