@@ -38,7 +38,7 @@ function AppNav(props) {
               <Nav.Link href="/#/SubmitDefinitions">Submit Definitions</Nav.Link>
             </Nav>
             <Nav className="justify-content-end">
-              <Navbar.Text>User: {props.user.email}</Navbar.Text> 
+              <Nav.Link href='/#/userpage'>User: {props.user.email}</Nav.Link> 
               <Nav.Link to="/" onClick={()=>logOut()}>Logout</Nav.Link> 
             </Nav>
           </Navbar.Collapse>

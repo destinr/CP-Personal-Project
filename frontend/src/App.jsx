@@ -5,9 +5,10 @@ import axios from 'axios'
 import {HashRouter as Router, Routes, Route} from "react-router-dom";
 import AppNav from './components/Navbar.jsx';
 import AuthPage from './pages/Auth.jsx';
-import LandingPage from './pages/Landing.jsx';
-import UserPage from './components/UserCard.jsx';
+import UserPage from './pages/UserPage.jsx';
 import DefSubmitPage from './pages/SubmitDef.jsx';
+import HomePage from './pages/HomePage.jsx';
+
 
 function App() {
 
@@ -55,7 +56,8 @@ function App() {
 
       <Router>
         <Routes>
-          <Route path='' element={<LandingPage user={user}/>}/>
+          <Route path='' element={<HomePage user={user}/>}/>
+          <Route path='/userpage' element={<UserPage user={user}/>}/>
           <Route path='/auth' element={<AuthPage/>}/>
           <Route path='/submitdefinitions' element={<DefSubmitPage user={user}/>}/>
         </Routes>
