@@ -7,6 +7,8 @@ from .models import AppUser as User, Word, Definition
 import requests as HTTPClient
 from requests_oauthlib import OAuth1
 import re
+from dotenv import load_dotenv
+import os
 
 # Create your views here.
 
@@ -59,22 +61,20 @@ def logOut(request):
 @api_view(['GET'])
 def getWord(request):
 
+
     # Gathers a random word from the Random-Word-API
-    apiNinjaKey = '0m0x7UiJ5k3qldFYwp+v/Q==Z9t6K3oBvAenAdo0'
-    api_url = 'https://api.api-ninjas.com/v1/randomword'
-    app_id  = 'f42a39b0'
-    app_key  = '630b23220cad3f9a800f3fa8c0f16867'
     
     validWord = False
     while not validWord:
         
-        response = HTTPClient.get(api_url, headers={'X-Api-Key': '0m0x7UiJ5k3qldFYwp+v/Q==Z9t6K3oBvAenAdo0'})
+        api_url = 'https://api.api-ninjas.com/v1/randomword'
+        response = HTTPClient.get(api_url, headers={'X-Api-Key': os.getenv('apiNinjaKey')})
         strResponse = response.text
         wordTemp = (strResponse.split(":"))[1]
         wordFinal = "".join(re.findall("[a-zA-Z]+", wordTemp))
         
         endpoint = url = "https://od-api.oxforddictionaries.com/api/v2/" + 'entries' + "/" + 'en-us' + "/" + wordFinal.lower() + '?fields=' + 'definitions'
-        defRes = HTTPClient.get(endpoint, headers = {"app_id": app_id, "app_key": app_key})
+        defRes = HTTPClient.get(endpoint, headers = {"app_id": os.getenv('oxford_id'), "app_key": os.getenv('oxford_key')})
         defResJSON = defRes.json()
         try:
             definition = defResJSON['results'][0]['lexicalEntries'][0]['entries'][0]['senses'][0]['definitions'][0]
