@@ -10,6 +10,7 @@ function DefSubmitPage(props){
   const [oDef, setODef] = useState('')
   const [userDef, setUserDef] = useState('')
 
+  // Loads word and Oxford definition from backend. 
   useEffect(()=>{
 
     axios.get('/getWord/')
@@ -22,6 +23,7 @@ function DefSubmitPage(props){
     )
   }, [])
 
+  // Sends user definition to backend.
   async function sendDef(){
     event.preventDefault()
     let myResponse = await axios

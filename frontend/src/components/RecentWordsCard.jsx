@@ -7,6 +7,7 @@ function RecentWordsCard(props){
 
     const [recentDefs, setRecentDefs] = useState([])
     
+    // Pulls recent definitions from backend.
     useEffect(()=>{
 
         axios.post('/getRecent/',{'userEmail': props.user.email})

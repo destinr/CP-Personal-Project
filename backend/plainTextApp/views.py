@@ -17,6 +17,7 @@ def home(request):
     theIndex = open('static/index.html').read()
     return HttpResponse(theIndex)
 
+# Manages signin using Django's built-in session management
 @api_view(["POST"])
 def signIn(request):
     email=request.data["email"]
@@ -32,7 +33,7 @@ def signIn(request):
     else:
         return JsonResponse({'signIn':False})
 
-
+# Manages signup using Django's built-in user model
 @api_view(['POST'])
 def signUp(request):
     if request.method == "POST":
@@ -44,7 +45,7 @@ def signUp(request):
             print('oops!')
             return JsonResponse({'signUp':False})
        
-# Allows frontend to pull user data
+# Allows frontend to pull user data using Django's built-in session management
 @api_view(['GET'])
 def currentUser(request):
     if request.user.is_authenticated:
@@ -52,18 +53,20 @@ def currentUser(request):
         return HttpResponse(data)
     else:
         return JsonResponse({"user":None})
-
+    
+# Manages logout using Django's built-in session management
 @api_view(['POST'])
 def logOut(request):
     logout(request)
     return JsonResponse(data={'status': 'User logged out.'})
 
+# Retrieves a random word from the API Ninjas random word API (https://api.api-ninjas.com/v1/randomword), a definition from the Oxford Dictionary API (https://od-api.oxforddictionaries.com/api/v2/), and serves them to the frontend. 
 @api_view(['GET'])
 def getWord(request):
 
-
     # Gathers a random word from the Random-Word-API
     
+    #While loop ensures that the random word has a corresponding definition from the Oxford API
     validWord = False
     while not validWord:
         
@@ -87,18 +90,19 @@ def getWord(request):
         newWord=Word(word=wordFinal)
         newWord.save()
         wordObj=Word.objects.get(word=wordFinal)
-        data = {'id': wordObj.id, 'word':wordObj.word}
         
     
     # serves existing word database instance if word is already in database    
     except:
         wordObj=Word.objects.get(word=wordFinal)
-        data = {'id': wordObj.id, 'word':wordObj.word}  
-        
+     
+    # Creates data to be sent to the frontend    
+    data = {'id': wordObj.id, 'word':wordObj.word}  
     data['ODef'] = definition
     
     return JsonResponse(data)
 
+#Adds user-generated definitions to the definitions database
 @api_view(['POST'])
 def submitDef(request):
     userDef = request.data['userDef']
@@ -109,11 +113,11 @@ def submitDef(request):
     relatedWord = Word.objects.get(id=wordID)
     
     newDefinition = Definition(word=relatedWord, user=relatedUser, definition=userDef)
-    print(newDefinition)
     newDefinition.save()
     
     return JsonResponse({'success':True})
 
+#Gathers the 5 most recent definitions for a user and serves them to the frontend.
 @api_view(['POST'])
 def getRecent(request):
     userEmail = request.data['userEmail']
@@ -122,6 +126,7 @@ def getRecent(request):
     definitions = list(Definition.objects.filter(user=relatedUser))
     data = {}
     
+    # Grabs most recent 5 if more than 5 submitted. All otherwise.
     if len(definitions) > 5:
         for entry in definitions[-5:]:
             data[entry.word.word] = entry.definition
